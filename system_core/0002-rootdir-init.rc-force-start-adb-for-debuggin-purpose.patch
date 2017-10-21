@@ -1,0 +1,32 @@
+From 9c378f15370bcddb692d9fda6496703d1a19b95e Mon Sep 17 00:00:00 2001
+From: Cswl Coldwind <cswl1337@gmail.com>
+Date: Sat, 21 Oct 2017 11:27:45 +0545
+Subject: [PATCH 6/6] rootdir: init.rc force start adb for debuggin purposes
+ dont forget to revert while releasing
+
+Change-Id: I6f0228abea74f4478964f2f2176c9fb4ccfaa9c2
+---
+ rootdir/init.usb.rc | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/rootdir/init.usb.rc b/rootdir/init.usb.rc
+index 915d159..43da689 100644
+--- a/rootdir/init.usb.rc
++++ b/rootdir/init.usb.rc
+@@ -24,6 +24,13 @@ on property:ro.kernel.qemu=1
+ 
+ on boot
+     setprop sys.usb.configfs 0
++    write /sys/class/android_usb/android0/enable 0
++    write /sys/class/android_usb/android0/idVendor 18d1
++    write /sys/class/android_usb/android0/idProduct 4EE7
++    write /sys/class/android_usb/android0/functions adb
++    write /sys/class/android_usb/android0/enable 1
++    start adbd
++    setprop sys.usb.state adb
+ 
+ # Used to disable USB when switching states
+ on property:sys.usb.config=none && property:sys.usb.configfs=0
+-- 
+2.14.2
+

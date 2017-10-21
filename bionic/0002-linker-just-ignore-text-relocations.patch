@@ -1,0 +1,34 @@
+From a83d9af9345efc3ace9a19b91682d7c58c24e352 Mon Sep 17 00:00:00 2001
+From: Cswl Coldwind <cswl1337@gmail.com>
+Date: Sat, 21 Oct 2017 11:17:50 +0545
+Subject: [PATCH 2/2] linker:just ignore text relocations
+
+Change-Id: I1f5e6058dccfde722fb3c9b2383abe0e1d1909bd
+---
+ linker/linker.cpp | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/linker/linker.cpp b/linker/linker.cpp
+index ebfb756..d3241c3 100644
+--- a/linker/linker.cpp
++++ b/linker/linker.cpp
+@@ -4003,15 +4003,11 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t&
+ #ifndef ALLOW_PLATFORM_TEXTRELS
+     // Fail if app is targeting sdk version > 22
+     if (get_application_target_sdk_version() > 22) {
+-#else
+-    // Some devices require an exception for platform libs (e.g. vendor libs)
+-    if (get_application_target_sdk_version() != __ANDROID_API__ &&
+-        get_application_target_sdk_version() > 22) {
+-#endif
+       PRINT("%s: has text relocations", get_realpath());
+       DL_ERR("%s: has text relocations", get_realpath());
+       return false;
+     }
++#endif
+     // Make segments writable to allow text relocations to work properly. We will later call
+     // phdr_table_protect_segments() after all of them are applied.
+     DL_WARN("%s has text relocations. This is wasting memory and prevents "
+-- 
+2.14.2
+

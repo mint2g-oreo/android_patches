@@ -1,0 +1,57 @@
+From 30c6d91fc1a05b5bb8bf79a461c1ba021c437211 Mon Sep 17 00:00:00 2001
+From: Cswl Coldwind <cswl1337@gmail.com>
+Date: Sat, 21 Oct 2017 00:37:58 +0545
+Subject: [PATCH 4/6] init: Allow starting of services without SELinux domain
+
+Change-Id: Ie273aff1af1359e91bad7f5ca718201452dc35aa
+---
+ init/Android.mk  | 5 +++++
+ init/service.cpp | 4 ++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/init/Android.mk b/init/Android.mk
+index d6f211e..db30f02 100644
+--- a/init/Android.mk
++++ b/init/Android.mk
+@@ -68,6 +68,11 @@ include $(BUILD_STATIC_LIBRARY)
+ 
+ include $(CLEAR_VARS)
+ LOCAL_CPPFLAGS := $(init_cflags)
++
++ifeq ($(SERVICES_WITHOUT_SELINUX_DOMAIN),true)
++LOCAL_CFLAGS += -DWITHOUT_SELINUX_DOMAIN
++endif
++
+ LOCAL_SRC_FILES:= \
+     bootchart.cpp \
+     builtins.cpp \
+diff --git a/init/service.cpp b/init/service.cpp
+index 8127e70..5a7c037 100644
+--- a/init/service.cpp
++++ b/init/service.cpp
+@@ -371,18 +371,22 @@ bool Service::Start() {
+             scon = ret_scon;
+             free(ret_scon);
+         }
++#ifndef WITHOUT_SELINUX_DOMAIN
+         if (rc == 0 && scon == mycon) {
+             ERROR("Service %s does not have a SELinux domain defined.\n", name_.c_str());
+             free(mycon);
+             free(fcon);
+             return false;
+         }
++#endif
+         free(mycon);
+         free(fcon);
++#ifndef WITHOUT_SELINUX_DOMAIN
+         if (rc < 0) {
+             ERROR("could not get context while starting '%s'\n", name_.c_str());
+             return false;
+         }
++#endif
+     }
+ 
+     NOTICE("Starting service '%s'...\n", name_.c_str());
+-- 
+2.14.2
+
