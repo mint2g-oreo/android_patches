@@ -1,0 +1,42 @@
+From 3734eec259b59b0634cf385d80dfb80d2ea0edae Mon Sep 17 00:00:00 2001
+From: corphish <d97.avinaba@gmail.com>
+Date: Wed, 29 Jun 2016 00:00:06 +0530
+Subject: [PATCH] graphics: Add enums needed by camera
+
+Signed-off-by: corphish <d97.avinaba@gmail.com>
+---
+ include/system/graphics.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/include/system/graphics.h b/include/system/graphics.h
+index 529a562f3..4b0173768 100644
+--- a/include/system/graphics.h
++++ b/include/system/graphics.h
+@@ -58,6 +58,8 @@ typedef enum android_pixel_format {
+     HAL_PIXEL_FORMAT_RGB_888            = 3,
+     HAL_PIXEL_FORMAT_RGB_565            = 4,
+     HAL_PIXEL_FORMAT_BGRA_8888          = 5,
++    HAL_PIXEL_FORMAT_RGBA_5551          = 6,
++    HAL_PIXEL_FORMAT_RGBA_4444          = 7,
+ 
+     /*
+      * 0x100 - 0x1FF
+@@ -441,6 +443,15 @@ typedef enum android_pixel_format {
+     HAL_PIXEL_FORMAT_YCbCr_422_SP       = 0x10, // NV16
+     HAL_PIXEL_FORMAT_YCrCb_420_SP       = 0x11, // NV21
+     HAL_PIXEL_FORMAT_YCbCr_422_I        = 0x14, // YUY2
++
++    HAL_PIXEL_FORMAT_YCbCr_420_I  = 0x15,
++    HAL_PIXEL_FORMAT_CbYCrY_422_I = 0x16,
++    HAL_PIXEL_FORMAT_CbYCrY_420_I = 0x17,
++    HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED = 0x20,
++    HAL_PIXEL_FORMAT_YCbCr_420_SP       = 0x21,
++    HAL_PIXEL_FORMAT_YCrCb_420_SP_TILED = 0x22,
++    HAL_PIXEL_FORMAT_YCrCb_422_SP       = 0x23,
++    HAL_PIXEL_FORMAT_YCrCb_420_P  = 0x24,
+ } android_pixel_format_t;
+ 
+ /*
+-- 
+2.14.2
+
