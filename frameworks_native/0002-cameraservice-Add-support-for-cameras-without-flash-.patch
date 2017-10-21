@@ -1,0 +1,133 @@
+From bf84658f124467ee300b7b0778dab6256f0f3e71 Mon Sep 17 00:00:00 2001
+From: corphish <d97.avinaba@gmail.com>
+Date: Mon, 12 Sep 2016 20:20:34 +0530
+Subject: [PATCH 2/2] cameraservice: Add support for cameras without flash -
+ For some reason, mint2g fails to boot as libcameraservice keeps on crashing,
+ caused by a NULL pointer reference to flashlight which is not present on the
+ device :/. - Should be fixed in HAL.
+
+Signed-off-by: corphish <d97.avinaba@gmail.com>
+---
+ services/camera/libcameraservice/Android.mk        |  4 ++++
+ services/camera/libcameraservice/CameraService.cpp | 14 ++++++++++++--
+ services/camera/libcameraservice/CameraService.h   |  2 ++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/services/camera/libcameraservice/Android.mk b/services/camera/libcameraservice/Android.mk
+index ced1232b0..1b0946f1f 100644
+--- a/services/camera/libcameraservice/Android.mk
++++ b/services/camera/libcameraservice/Android.mk
+@@ -96,6 +96,10 @@ ifeq ($(BOARD_NEEDS_MEMORYHEAPION),true)
+     LOCAL_CFLAGS += -DUSE_MEMORY_HEAP_ION
+ endif
+ 
++ifeq ($(TARGET_CAMERA_HAS_NO_FLASH),true)
++	LOCAL_CPPFLAGS += -DNO_FLASHLIGHT
++endif
++
+ LOCAL_MODULE:= libcameraservice
+ 
+ include $(BUILD_SHARED_LIBRARY)
+diff --git a/services/camera/libcameraservice/CameraService.cpp b/services/camera/libcameraservice/CameraService.cpp
+index 008aa47c9..614d5d4c3 100644
+--- a/services/camera/libcameraservice/CameraService.cpp
++++ b/services/camera/libcameraservice/CameraService.cpp
+@@ -168,7 +168,9 @@ void CameraService::onFirstRef()
+     // Update battery life tracking if service is restarting
+     BatteryNotifier& notifier(BatteryNotifier::getInstance());
+     notifier.noteResetCamera();
++#ifndef NO_FLASHLIGHT
+     notifier.noteResetFlashlight();
++#endif
+ 
+     camera_module_t *rawModule;
+     int err = hw_get_module(CAMERA_HARDWARE_MODULE_ID,
+@@ -202,12 +204,14 @@ void CameraService::onFirstRef()
+         setUpVendorTags();
+     }
+ 
++#ifndef NO_FLASHLIGHT
+     mFlashlight = new CameraFlashlight(*mModule, *this);
+     status_t res = mFlashlight->findFlashUnits();
+     if (res) {
+         // impossible because we haven't open any camera devices.
+         ALOGE("Failed to find flash units.");
+     }
++#endif
+ 
+     int latestStrangeCameraId = INT_MAX;
+     for (int i = 0; i < mNumberOfCameras; i++) {
+@@ -257,11 +261,12 @@ void CameraService::onFirstRef()
+             mCameraStates.emplace(cameraId, std::make_shared<CameraState>(cameraId, cost,
+                     conflicting));
+         }
+-
++#ifndef NO_FLASHLIGHT
+         if (mFlashlight->hasFlashUnit(cameraId)) {
+             mTorchStatusMap.add(cameraId,
+                     ICameraServiceListener::TORCH_STATUS_AVAILABLE_OFF);
+         }
++#endif
+     }
+ 
+     if (mModule->getModuleApiVersion() >= CAMERA_MODULE_API_VERSION_2_1) {
+@@ -369,6 +374,7 @@ void CameraService::onTorchStatusChanged(const String8& cameraId,
+ 
+ void CameraService::onTorchStatusChangedLocked(const String8& cameraId,
+         int32_t newStatus) {
++#ifndef NO_FLASHLIGHT
+     ALOGI("%s: Torch status changed for cameraId=%s, newStatus=%d",
+             __FUNCTION__, cameraId.string(), newStatus);
+ 
+@@ -424,6 +430,7 @@ void CameraService::onTorchStatusChangedLocked(const String8& cameraId,
+             i->onTorchStatusChanged(newStatus, String16{cameraId});
+         }
+     }
++#endif
+ }
+ 
+ Status CameraService::getNumberOfCameras(int32_t type, int32_t* numCameras) {
+@@ -2127,9 +2134,10 @@ binder::Status CameraService::BasicClient::disconnect() {
+ 
+     finishCameraOps();
+     // Notify flashlight that a camera device is closed.
++#ifndef NO_FLASHLIGHT    
+     mCameraService->mFlashlight->deviceClosed(String8::format("%d", mCameraId));
+     ALOGI("%s: Disconnected client for camera %d for PID %d", __FUNCTION__, mCameraId, mClientPid);
+-
++#endif
+     // client shouldn't be able to call into us anymore
+     mClientPid = 0;
+ 
+@@ -2668,12 +2676,14 @@ void CameraService::handleTorchClientBinderDied(const wp<IBinder> &who) {
+         if (mTorchClientMap[i] == who) {
+             // turn off the torch mode that was turned on by dead client
+             String8 cameraId = mTorchClientMap.keyAt(i);
++#ifndef NO_FLASHLIGHT
+             status_t res = mFlashlight->setTorchMode(cameraId, false);
+             if (res) {
+                 ALOGE("%s: torch client died but couldn't turn off torch: "
+                     "%s (%d)", __FUNCTION__, strerror(-res), res);
+                 return;
+             }
++#endif
+             mTorchClientMap.removeItemsAt(i);
+             break;
+         }
+diff --git a/services/camera/libcameraservice/CameraService.h b/services/camera/libcameraservice/CameraService.h
+index 25c109aa8..70b144c1c 100644
+--- a/services/camera/libcameraservice/CameraService.h
++++ b/services/camera/libcameraservice/CameraService.h
+@@ -895,7 +895,9 @@ binder::Status CameraService::connectHelper(const sp<CALLBACK>& cameraCb, const
+         }
+ 
+         // give flashlight a chance to close devices if necessary.
++#ifndef NO_FLASHLIGHT
+         mFlashlight->prepareDeviceOpen(cameraId);
++#endif
+ 
+         // TODO: Update getDeviceVersion + HAL interface to use strings for Camera IDs
+         int id = cameraIdToInt(cameraId);
+-- 
+2.14.2
+

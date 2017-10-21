@@ -1,0 +1,27 @@
+From 95df43ffb085934560f4390aee97cf9e17610503 Mon Sep 17 00:00:00 2001
+From: Avinaba Dalal <d97.avinaba@gmail.com>
+Date: Tue, 13 Sep 2016 20:35:00 +0530
+Subject: [PATCH 2/3] audio: Define new enums for MR0_audio_patch
+
+---
+ audio/include/system/audio.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/audio/include/system/audio.h b/audio/include/system/audio.h
+index 02043db4..bc851a4d 100644
+--- a/audio/include/system/audio.h
++++ b/audio/include/system/audio.h
+@@ -815,6 +815,10 @@ enum {
+     AUDIO_DEVICE_IN_SPDIF                 = AUDIO_DEVICE_BIT_IN | 0x10000,
+     AUDIO_DEVICE_IN_BLUETOOTH_A2DP        = AUDIO_DEVICE_BIT_IN | 0x20000,
+     AUDIO_DEVICE_IN_LOOPBACK              = AUDIO_DEVICE_BIT_IN | 0x40000,
++    AUDIO_DEVICE_IN_IP                    = AUDIO_DEVICE_BIT_IN | 0x80000,
++    /* audio bus implemented by the audio system (e.g an MOST stereo channel) */
++    AUDIO_DEVICE_IN_BUS                   = AUDIO_DEVICE_BIT_IN | 0x100000,
++    AUDIO_DEVICE_IN_PROXY                 = AUDIO_DEVICE_BIT_IN | 0x1000000,
+ #else
+     AUDIO_DEVICE_IN_COMMUNICATION         = AUDIO_DEVICE_BIT_IN | 0x1,
+     AUDIO_DEVICE_IN_AMBIENT               = AUDIO_DEVICE_BIT_IN | 0x2,
+-- 
+2.14.2
+

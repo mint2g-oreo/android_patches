@@ -1,0 +1,24 @@
+From 96045c1f184f9af94942b239b578241721469c06 Mon Sep 17 00:00:00 2001
+From: Avinaba Dalal <d97.avinaba@gmail.com>
+Date: Tue, 13 Sep 2016 20:39:06 +0530
+Subject: [PATCH 3/3] audio: Remove duplicate defs
+
+---
+ audio/include/system/audio.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/audio/include/system/audio.h b/audio/include/system/audio.h
+index bc851a4d..818b7e47 100644
+--- a/audio/include/system/audio.h
++++ b/audio/include/system/audio.h
+@@ -818,7 +818,6 @@ enum {
+     AUDIO_DEVICE_IN_IP                    = AUDIO_DEVICE_BIT_IN | 0x80000,
+     /* audio bus implemented by the audio system (e.g an MOST stereo channel) */
+     AUDIO_DEVICE_IN_BUS                   = AUDIO_DEVICE_BIT_IN | 0x100000,
+-    AUDIO_DEVICE_IN_PROXY                 = AUDIO_DEVICE_BIT_IN | 0x1000000,
+ #else
+     AUDIO_DEVICE_IN_COMMUNICATION         = AUDIO_DEVICE_BIT_IN | 0x1,
+     AUDIO_DEVICE_IN_AMBIENT               = AUDIO_DEVICE_BIT_IN | 0x2,
+-- 
+2.14.2
+
