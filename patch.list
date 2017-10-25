@@ -5,3 +5,4 @@ frameworks/native github mint cm-14.1 https://github.com/mint2g/android_framewor
 hardware/libhardware github mint cm-14.1 https://github.com/mint2g/android_hardware_libhardware 
 system/core github mint cm-14.1 https://github.com/mint2g/android_system_core
 system/media github mint cm-14.1 https://github.com/mint2g/android_system_media 
+vendor/cm github mint cm-14.1 git@github.com:mint2g/android_vendor_cm.git
