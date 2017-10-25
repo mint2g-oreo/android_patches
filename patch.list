@@ -1,0 +1,7 @@
+bionic github mint cm-14.1 https://github.com/mint2g/android_bionic  
+frameworks/av github mint cm-14.1 https://github.com/mint2g/android_frameworks_av
+frameworks/opt/telephony github mint cm-14.1 https://github.com/mint2g/android_frameworks_opt_telephony 
+frameworks/native github mint cm-14.1 https://github.com/mint2g/android_frameworks_native  
+hardware/libhardware github mint cm-14.1 https://github.com/mint2g/android_hardware_libhardware 
+system/core github mint cm-14.1 https://github.com/mint2g/android_system_core
+system/media github mint cm-14.1 https://github.com/mint2g/android_system_media 

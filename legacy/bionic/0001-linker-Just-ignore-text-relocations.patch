@@ -1,0 +1,35 @@
+From 94c9a5e82c13b10b793f82c1221d15caf3807c15 Mon Sep 17 00:00:00 2001
+From: Avinaba Dalal <d97.avinaba@gmail.com>
+Date: Sun, 27 Aug 2017 12:22:39 +0000
+Subject: [PATCH] linker: Just ignore text relocations
+
+---
+ linker/linker.cpp | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/linker/linker.cpp b/linker/linker.cpp
+index ef31dae99..c9c7c1ae4 100644
+--- a/linker/linker.cpp
++++ b/linker/linker.cpp
+@@ -4063,16 +4063,13 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t&
+   if (has_text_relocations) {
+     // Fail if app is targeting sdk version > 22
+ #if !defined(__i386__) // ffmpeg says that they require text relocations on x86
+-#if defined(TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS)
+-    if (get_application_target_sdk_version() != __ANDROID_API__
+-        && get_application_target_sdk_version() > 22) {
+-#else
++#if !defined(TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS)
+     if (get_application_target_sdk_version() > 22) {
+-#endif
+       PRINT("%s: has text relocations", get_realpath());
+       DL_ERR("%s: has text relocations", get_realpath());
+       return false;
+     }
++#endif
+ #endif
+     // Make segments writable to allow text relocations to work properly. We will later call
+     // phdr_table_protect_segments() after all of them are applied.
+-- 
+2.14.2
+

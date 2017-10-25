@@ -4,7 +4,7 @@ instead of forking and merging, i like to maintain a linear history
 so that the changes always apply to on top of the branch
 
 this requires a little maintainence and fails on conflicts
-but is a bit "cleaner" 
+but is a bit "cleaner"
 
 ### repos
 https://github.com/mint2g/android_bionic  
@@ -15,17 +15,11 @@ https://github.com/mint2g/android_hardware_libhardware
 https://github.com/mint2g/android_system_core  
 https://github.com/mint2g/android_system_media  
 
+### usage
+After a `repo sync` repo will checkout the branch from specified remote.  
+Run `./patches/patch.sh log` from source dir to see if the original remote has updated.  
+Then rebase with `./patches/patch.sh rebase`
 
-the patches in this repo are there for easy applying
-
-```
-git reset --hard remote-branch-tip
-git pull
-git am ../patches/.patch
-```
-then update the patch upon confict if necessary
-
-
-### TODO:
-write a script to apply all the patches in order  
-write a script to update patches  
+Fix the patch upon confict if necessary.  
+Then update our remote with  
+`./patches/patch.sh forcepush`
