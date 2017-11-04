@@ -1,8 +1,8 @@
-bionic github mint cm-14.1 https://github.com/mint2g/android_bionic  
-frameworks/av github mint cm-14.1 https://github.com/mint2g/android_frameworks_av
-frameworks/opt/telephony github mint cm-14.1 https://github.com/mint2g/android_frameworks_opt_telephony 
-frameworks/native github mint cm-14.1 https://github.com/mint2g/android_frameworks_native  
-hardware/libhardware github mint cm-14.1 https://github.com/mint2g/android_hardware_libhardware 
-system/core github mint cm-14.1 https://github.com/mint2g/android_system_core
-system/media github mint cm-14.1 https://github.com/mint2g/android_system_media 
-vendor/cm github mint cm-14.1 git@github.com:mint2g/android_vendor_cm.git
+bionic github mint lineage-15.0 https://github.com/mint2g-oreo/android_bionic  
+frameworks/av github mint lineage-15.0 https://github.com/mint2g-oreo/android_frameworks_av
+frameworks/opt/telephony github mint lineage-15.0 https://github.com/mint2g-oreo/android_frameworks_opt_telephony 
+frameworks/native github mint lineage-15.0 https://github.com/mint2g-oreo/android_frameworks_native  
+hardware/libhardware github mint lineage-15.0 https://github.com/mint2g-oreo/android_hardware_libhardware 
+system/core github mint lineage-15.0 https://github.com/mint2g-oreo/android_system_core
+system/media github mint lineage-15.0 https://github.com/mint2g-oreo/android_system_media 
+vendor/cm github mint lineage-15.0 git@github.com:mint2g-oreo/android_vendor_cm.git
